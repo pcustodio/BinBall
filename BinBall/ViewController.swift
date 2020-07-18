@@ -17,17 +17,57 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //add lights
+        sceneView.autoenablesDefaultLighting = true
+        
         // Set the view's delegate
         sceneView.delegate = self
         
         // Show statistics such as fps and timing information
-        sceneView.showsStatistics = true
+        //sceneView.showsStatistics = true
         
         // Create a new scene
-        let scene = SCNScene(named: "art.scnassets/ship.scn")!
+        let scene = SCNScene()
         
         // Set the scene to the view
         sceneView.scene = scene
+        
+        addBin()
+    }
+    
+    //add trash can to scene
+    func addBin() {
+        guard let binScene = SCNScene(named: "art.scnassets/trash_can.scn") else {
+            return
+        }
+        guard let binNode = binScene.rootNode.childNode(withName: "Bin", recursively: false) else {
+            return
+        }
+        binNode.position = SCNVector3(x: 0, y:0, z: -3)
+        sceneView.scene.rootNode.addChildNode(binNode)
+    }
+    
+    //recognize gestures
+    func registerGestureRecognizer() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        sceneView.addGestureRecognizer(tap)
+    }
+    @objc func handleTap(gestureRecognizer: UIGestureRecognizer) {
+        print("will it work")
+        //when we tap on screen we want a ball to be created and positioned at camera center point
+        
+        //scene view to be accessed
+        guard let sceneView = gestureRecognizer.view as? ARSCNView else {
+            return
+        }
+        
+        //access the center point
+        guard let  centerPoint = sceneView.pointOfView else {
+            return
+        }
+        
+        //transform matrix contains orientation and location of camera so now we can now determine position of camera
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -46,6 +86,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Pause the view's session
         sceneView.session.pause()
     }
+    
+
 
     // MARK: - ARSCNViewDelegate
     
