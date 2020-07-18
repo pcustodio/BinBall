@@ -67,7 +67,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
         
         //transform matrix contains orientation and location of camera so now we can now determine position of camera
-        
+        let cameraTransform = centerPoint.transform
+        //get camera location
+        let cameraLocation = SCNVector3(x:cameraTransform.m41, y:cameraTransform.m42, z:cameraTransform.m43)
+        //get camera orientaion
+        let cameraOrientation = SCNVector3(x:cameraTransform.m31, y:cameraTransform.m32, z:cameraTransform.m33)
+        //add both constants together x1+x2, y1+y2, z1+z2
+        let cameraPosition = SCNVector3Make(cameraLocation.x + cameraOrientation.x, cameraLocation.y + cameraOrientation.y , cameraLocation.z + cameraOrientation.z)
     }
     
     override func viewWillAppear(_ animated: Bool) {
